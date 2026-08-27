@@ -2,10 +2,8 @@ import { useState } from 'react'
 const Button = (props)=>{
    return <button onClick={props.onClick} >{props.text}</button>
 }
-const Display =(props)=>{
-  return <p> {props.name}   {props.variable}</p>
-}
-const FuncOUT = (props) => {
+
+const Statistics = (props) => {
   return (
     <p>
      {props.name}  {props.value}
@@ -31,11 +29,11 @@ const App = () => {
       <br/>
       <br/>
       <h1>Statistics</h1>
-      <Display name="good" variable={good}/>
-      <Display name="neutral" variable={neutral}/>
-      <Display name="bad" variable={bad}/>
-      <FuncOUT name="average" value={average}/>
-      <FuncOUT name="positive" value={positive}/>
+      <Statistics name="good" value={good}/>
+      <Statistics name="neutral" value={neutral}/>
+      <Statistics name="bad" value={bad}/>
+      <Statistics name="average" value={average}/>
+      <Statistics name="positive" value={positive}/>
     </div>
   )
 }
