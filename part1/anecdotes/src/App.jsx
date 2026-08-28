@@ -8,26 +8,16 @@ const Largest =({anecdotes,vote,selected})=>{
   const maxVotes = Math.max(...vote)
   const maxIndex = vote.indexOf(maxVotes)
 
-  if (maxVotes===0){
-    
-  return (
-      <div>
-        <h1>Anecdote with most votes</h1>
-        <p>No votes cast yet</p>
-      </div>
-    )
-}
-  else {
-
+  
   return (
     <>
-    <p>Anecdote with most votes</p>
+    <h1>Anecdote with most votes</h1>
     <div>{anecdotes[maxIndex]}</div>
     <div>has {vote[maxIndex]} votes</div>
     </>
   
   )
-}
+
 }
 const App = () => {
   const anecdotes = [
@@ -59,11 +49,14 @@ const App = () => {
 
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       <p>{anecdotes[selected]}</p>
-      <div><Button onClick={handleNextAnecdote} text="next anectode"/>
+      <p> has {vote[selected]} votes</p>
+      <div>
+      <Button onClick={handleNextAnecdote} text="next anectode"/>
       <Button onClick={VoteHandler} text="vote"/>
-      <Largest anecdotes={anecdotes} vote={vote} selected={selected}/>
       </div>
+      <Largest anecdotes={anecdotes} vote={vote} />
     </div>
   )
 }
