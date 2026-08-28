@@ -4,6 +4,31 @@ const Button = (props) =>{
     <button onClick={props.onClick}>{props.text}</button>
   )
 }
+const Largest =({anecdotes,vote,selected})=>{
+  const maxVotes = Math.max(...vote)
+  const maxIndex = vote.indexOf(maxVotes)
+
+  if (maxVotes===0){
+    
+  return (
+      <div>
+        <h1>Anecdote with most votes</h1>
+        <p>No votes cast yet</p>
+      </div>
+    )
+}
+  else {
+
+  return (
+    <>
+    <p>Anecdote with most votes</p>
+    <div>{anecdotes[maxIndex]}</div>
+    <div>has {vote[maxIndex]} votes</div>
+    </>
+  
+  )
+}
+}
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -18,6 +43,8 @@ const App = () => {
    
   const [selected, setSelected] = useState(0)
   const [vote,voteChanger]= useState(new Array(anecdotes.length).fill(0))
+
+
   const handleNextAnecdote = () => {
     const randomIndex = Math.floor(Math.random() * anecdotes.length)
     setSelected(randomIndex)
@@ -35,9 +62,8 @@ const App = () => {
       <p>{anecdotes[selected]}</p>
       <div><Button onClick={handleNextAnecdote} text="next anectode"/>
       <Button onClick={VoteHandler} text="vote"/>
+      <Largest anecdotes={anecdotes} vote={vote} selected={selected}/>
       </div>
-      
-
     </div>
   )
 }
