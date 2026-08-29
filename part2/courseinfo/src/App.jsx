@@ -28,7 +28,7 @@ const Part=({perts})=>{
     )
   }
 const Total =({parts})=>{
-  const sum = parts.reduce((acc, curr) => acc + curr['exercises'], 0);
+  const sum = parts.reduce((acc, curr) =>  acc + curr['exercises'], 0);
   console.log(sum)
   return(
     <p>
