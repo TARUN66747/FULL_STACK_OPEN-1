@@ -5,21 +5,28 @@ const App = () => {
     { name: 'Arto Hellas' }
   ]) 
   const [newName, setNewName] = useState('')
+  const isDuplicate = (nama) => {
+  return persons.some(person => person.name === nama)
+}
 
   const handleSubmit = (event) =>{
     event.preventDefault()
-     const personObject = {
+    const personObject = {
       name: newName
     }
-
+    if (isDuplicate(personObject.name)){
+      alert(`${newName} is already added to phonebook`)
+    }
+    else{
     setPersons(persons.concat(personObject))
     setNewName('')
+    }
   }
 
   const handleNameChange = (event) => {
     setNewName(event.target.value)
-    
-  }
+    }
+  
   
 
   return (
