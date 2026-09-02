@@ -1,6 +1,6 @@
 import { useState , useEffect} from 'react'
 import personService from './services/person'
-const Notification = ({ message }) => {
+const Notification = ({ message ,type}) => {
   if (message === null) {
     return null
   }
@@ -12,7 +12,7 @@ const Notification = ({ message }) => {
   borderRadius: '5px',
   padding: '10px',
   marginBottom: '10px',
-  color : 'green'
+  color : type ? 'red' : 'green'
 }
 
   return (
@@ -54,6 +54,7 @@ const App = () => {
   const [newNumber,setNewNumber]= useState('')
   const [searchString,setSearchString]=useState('')
   const [notificationMessage, setNotificationMessage] = useState(null)
+  const [isError, setIsError] = useState(false)
   const isDuplicate = (nama) => {
   return persons.some(person => person.name === nama)
 }
@@ -87,10 +88,21 @@ const App = () => {
         setNewName('')
         setNewNumber('')
         setNotificationMessage(`updated ${returnedPerson.name}`)
+        setIsError(false)
           setTimeout(() => {
           setNotificationMessage(null)
           }, 10000)
         
+      })
+      .catch(error =>{
+        setNotificationMessage(
+      `Information of ${existingPerson.name} has already been removed from server`
+    )
+    setIsError(true)
+    setTimeout(() => {
+      setNotificationMessage(null)
+    }, 5000)
+    setPersons(persons.filter(p => p.id !== existingPerson.id))
       })
   }
 }
@@ -102,6 +114,7 @@ const App = () => {
     console.log('addition completed')
     setNewName('')
     setNewNumber('')
+    setIsError(false)
     setNotificationMessage(`Added ${returnedPerson.name}`)
           setTimeout(() => {
           setNotificationMessage(null)
@@ -143,7 +156,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={notificationMessage} />
+      <Notification message={notificationMessage} type={isError} />
        <Filterr searchString={searchString} onChange={handleSearchStringChange} />
 
       <h2> add a new</h2>
