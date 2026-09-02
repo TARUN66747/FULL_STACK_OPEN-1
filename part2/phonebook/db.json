@@ -25,11 +25,15 @@
       "number": "8200866747",
       "id": "Iro9BRb-xCY"
     },
-    
     {
-      "name": "TARUN Singh",
-      "number": " 9879269617",
-      "id": "hlWkgPqbSz0"
+      "name": "yash",
+      "number": "8000023102",
+      "id": "U9wQKxRHegg"
+    },
+    {
+      "name": "pankaj",
+      "number": "9879269617",
+      "id": "E6u4VdAXki4"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

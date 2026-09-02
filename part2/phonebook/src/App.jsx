@@ -1,6 +1,6 @@
 import { useState , useEffect} from 'react'
 import axios from 'axios'
-
+import personService from './services/person'
 const Filterr = (props) =>{
   return (
   <div> filter shown with :<input value ={props.searchString} onChange={props.onChange}/></div>
@@ -52,15 +52,17 @@ const App = () => {
       alert(`${newName} is already added to phonebook`)
     }
     else{
-    axios
-      .post('http://localhost:3001/persons', personObject)
-      .then((response) => {
-        setPersons(persons.concat(response.data))
-        setNewName('')
-        setNewNumber('')
-      })
+   personService
+  .create(personObject)
+  .then(returnedPerson => {
+    setPersons(persons.concat(returnedPerson))
+    console.log('addition completed')
+    setNewName('')
+    setNewNumber('')
+  })
+      }
     }
-  }
+  
 
   const handleNameChange = (event) => {
     setNewName(event.target.value)
@@ -73,10 +75,10 @@ const App = () => {
   }
   const hook = () =>{
     console.log("effect")
-    axios.get("http://localhost:3001/persons")
+    personService.getAll()
     .then(response => {
       console.log('promise fulfilled')
-      setPersons(response.data)
+      setPersons(response)
     })
   }
   useEffect(hook,[])
