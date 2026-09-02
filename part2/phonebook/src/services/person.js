@@ -12,4 +12,9 @@ const create =(newObject)=>{
     return request.then(response => response.data)
 }
 
-export default {getAll,create}
+const deleteData =(identity)=>{
+    const request =axios.delete(`${baseUrl}/${identity}`,)
+    return request.then(response => response.data)
+}
+
+export default {getAll,create,deleteData}

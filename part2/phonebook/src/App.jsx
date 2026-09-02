@@ -1,12 +1,10 @@
 import { useState , useEffect} from 'react'
-import axios from 'axios'
 import personService from './services/person'
 const Filterr = (props) =>{
   return (
   <div> filter shown with :<input value ={props.searchString} onChange={props.onChange}/></div>
 )
 }
-
 const PersonForm = (props) =>{
   return(
     <form onSubmit={props.handleSubmit}>
@@ -20,11 +18,9 @@ const PersonForm = (props) =>{
       </form>
   )
 }
-
-
 const PersonData =(props)=>{
   return (<>
-    {((props.persons).filter(value => value.name.toLowerCase().includes((props.searchString).toLowerCase())).map(value=><p key ={value.id}> {value.name} {value.number}</p>) )}  
+    {((props.persons).filter(value => value.name.toLowerCase().includes((props.searchString).toLowerCase())).map(value=><p key ={value.id}> {value.name} {value.number}<button onClick={() => props.handleDeleteData(value.id,value.name)}>delete</button></p>) )}  
   </>)
 }
 
@@ -73,6 +69,16 @@ const App = () => {
   const handleSearchStringChange = (event)=>{
     setSearchString(event.target.value)
   }
+  const handleDeleteData=(id,name)=>{
+    if(window.confirm(`Delete ${name}?`)){
+    personService.deleteData(id)
+    .then(() => {
+      
+       console.log("data deleted")
+        setPersons(persons.filter(p => p.id !== id))
+      })}
+  }
+  
   const hook = () =>{
     console.log("effect")
     personService.getAll()
@@ -91,9 +97,8 @@ const App = () => {
       <h2> add a new</h2>
       <PersonForm handleSubmit={handleSubmit} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange}/>
       <h2>Numbers</h2>
-      <PersonData persons={persons} searchString={searchString}/>
+      <PersonData persons={persons} searchString={searchString} handleDeleteData={handleDeleteData}/>
     </div>
   )
 }
-
 export default App
