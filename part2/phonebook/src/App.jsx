@@ -1,5 +1,27 @@
 import { useState , useEffect} from 'react'
 import personService from './services/person'
+const Notification = ({ message }) => {
+  if (message === null) {
+    return null
+  }
+  
+  const fashion = {
+  background: 'lightgrey',
+  fontSize: '20px',
+  borderStyle: 'solid',
+  borderRadius: '5px',
+  padding: '10px',
+  marginBottom: '10px',
+  color : 'green'
+}
+
+  return (
+    <div className="error" style={fashion}>
+      {message}
+    </div>
+  )
+}
+
 const Filterr = (props) =>{
   return (
   <div> filter shown with :<input value ={props.searchString} onChange={props.onChange}/></div>
@@ -31,6 +53,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber,setNewNumber]= useState('')
   const [searchString,setSearchString]=useState('')
+  const [notificationMessage, setNotificationMessage] = useState(null)
   const isDuplicate = (nama) => {
   return persons.some(person => person.name === nama)
 }
@@ -63,6 +86,11 @@ const App = () => {
         setPersons(updatedPersonsList)
         setNewName('')
         setNewNumber('')
+        setNotificationMessage(`updated ${returnedPerson.name}`)
+          setTimeout(() => {
+          setNotificationMessage(null)
+          }, 10000)
+        
       })
   }
 }
@@ -74,6 +102,10 @@ const App = () => {
     console.log('addition completed')
     setNewName('')
     setNewNumber('')
+    setNotificationMessage(`Added ${returnedPerson.name}`)
+          setTimeout(() => {
+          setNotificationMessage(null)
+          }, 10000)
   })
       }
     }
@@ -111,6 +143,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notificationMessage} />
        <Filterr searchString={searchString} onChange={handleSearchStringChange} />
 
       <h2> add a new</h2>
