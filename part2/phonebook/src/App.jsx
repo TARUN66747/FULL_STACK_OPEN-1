@@ -47,9 +47,7 @@ const PersonData =(props)=>{
 }
 
 const App = () => {
-  const [persons, setPersons] = useState([
-  
-])
+  const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber,setNewNumber]= useState('')
   const [searchString,setSearchString]=useState('')
@@ -139,6 +137,14 @@ const App = () => {
     .then(() => {
       
        console.log("data deleted")
+        setPersons(persons.filter(p => p.id !== id))
+      })
+    .catch(error => {
+        setNotificationMessage(
+          `Information of ${name} has already been removed from server`
+        )
+        setIsError(true)
+        setTimeout(() => setNotificationMessage(null), 5000)
         setPersons(persons.filter(p => p.id !== id))
       })}
   }
