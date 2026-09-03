@@ -4,6 +4,8 @@ import axios from 'axios'
 const App = () => {
   const [searchString, setsearchString] = useState('')
   const [data, updateData] = useState([])
+  const [weather, setWeather] = useState(null)
+  const apiKey = import.meta.env.VITE_WEATHER_KEY
  
 
   const hook = () => {
@@ -26,8 +28,22 @@ const App = () => {
   const exactMatch = countriesToShow.find(
     country => country.name.common.toLowerCase() === searchString.trim().toLowerCase()
   )
-  const matchingCountries = exactMatch ? [exactMatch] : countriesToShow
-  const onShow =()=>{}
+  
+ const matchingCountries = exactMatch ? [exactMatch] : countriesToShow
+
+
+ const capital = matchingCountries.length === 1 ? matchingCountries[0].capital?.[0] : null
+
+  useEffect(() => {
+    if (capital && apiKey) {
+      axios
+        .get(`https://api.openweathermap.org/data/2.5/weather?q=${capital}&appid=${apiKey}&units=metric`)
+        .then(response => {
+          setWeather(response.data)
+        })
+        .catch(err => console.error('Weather fetch error:', err))
+    }
+  }, [capital, apiKey])
   const display = () => {
     // If the input is empty, return nothing
     if (!searchString) return null
@@ -65,6 +81,17 @@ const App = () => {
             alt={country.flags.alt || `Flag of ${country.name.common}`} 
             width="150" 
           />
+          {weather && (
+            <div>
+              <h2>Weather in {country.capital?.[0]}</h2>
+              <p>temperature {weather.main.temp} Celsius</p>
+              <img 
+                src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} 
+                alt={weather.weather[0].description} 
+              />
+              <p>wind {weather.wind.speed} m/s</p>
+            </div>
+          )}
         </div>
       )
     }
