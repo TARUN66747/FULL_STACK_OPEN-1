@@ -54,7 +54,19 @@ app.delete('/api/persons/:id',(request,response)=>{
 })
 app.post('/api/persons',(request,response)=>{
   const data =request.body
+  const checker =()=>person.some(value=>value.name===data.name)
 
+  if (!data.name || !data.number ){
+     return response.status(400).json({ 
+      error: 'name or number missing' 
+    })
+  }
+  else if(checker()){
+   return response.status(400).json({ 
+      error: 'name must be unique' 
+    })
+
+  }
   const generateId = () => String(Math.floor(Math.random() * 1000000))
   data.id = generateId()
   person =  person.concat(data)
