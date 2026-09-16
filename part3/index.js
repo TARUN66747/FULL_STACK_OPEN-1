@@ -48,32 +48,36 @@ app.get('/info',(request,response)=>{
 //   person = person.filter(value => value.id!==id)
 //   response.status(204).end()
 // })
-// app.post('/api/persons',(request,response)=>{
-//   const data =request.body
-//   const checker =()=>person.some(value=>value.name===data.name)
+app.post('/api/persons',(request,response,next)=>{
+  const data =request.body
+  
+  if (!data.name || !data.number ){
+     return response.status(400).json({ 
+      error: 'name or number missing' 
+    })
+  }
+  Record.find({name:data.name})
+  .then(existingPersons => {
+    if(existingPersons.length > 0){
+      return response.status(400).json({
+        error : 'name must be unique'
+      })
+    }
+    const person = new Record({
+    name :data.name,
+    number : data.number
+  })
 
-//   if (!data.name || !data.number ){
-//      return response.status(400).json({ 
-//       error: 'name or number missing' 
-//     })
-//   }
-//   else if(checker()){
-//    return response.status(400).json({ 
-//       error: 'name must be unique' 
-//     })
+  person.save().then(savedPerson => {
+    response.json(savedPerson)
+  })
+  .catch(error => next(error))
+  })
+  
+  .catch(error => next(error))
+})
 
-//   }
-//   const generateId = () => String(Math.floor(Math.random() * 1000000))
-//   data.id = generateId()
-//   person =  person.concat(data)
-//   response.json(data)
-// })
 
-/*
-const PORT = process.env.PORT || 3001
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
-})*/ 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
