@@ -118,6 +118,13 @@ const App = () => {
           setNotificationMessage(null)
           }, 10000)
   })
+  .catch(error => {
+          setIsError(true)
+          setNotificationMessage(error.response.data.error)
+          setTimeout(() => {
+            setNotificationMessage(null)
+          }, 10000)
+        })
       }
     }
   
