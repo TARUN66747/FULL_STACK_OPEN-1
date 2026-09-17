@@ -32,9 +32,9 @@ app.get('/info',(request,response)=>{
     })
 
     })
-app.get('/api/persons/:id',(request,response)=>{
+app.get('/api/persons/:id',(request,response,next)=>{
     const id = request.params.id
-    Record.find({}).then(data => data.find(person =>person.id === id)).then(
+    Record.findById(id).then(
       (newPerson)=>{
         if(newPerson){
         response.json(newPerson)
@@ -44,15 +44,7 @@ app.get('/api/persons/:id',(request,response)=>{
         response.status(404).end()
     }
     })
-    // Record.find((value) => value.id===id).then(newPersons =>{
-    //   if(newPersons){
-    //     response.json(newPersons)
-    // }
-    // else{
-    
-    //     response.status(404).end()
-    // }
-    // })
+    .catch(error => next(error))
     
 })
 
