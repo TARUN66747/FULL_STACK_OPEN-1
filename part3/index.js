@@ -63,6 +63,33 @@ app.delete('/api/persons/:id',(request,response,next)=>{
   .catch(error => next(error))
 })
 
+app.put('/api/persons/:id',(request,response,next)=>{
+  const id = request.params.id
+  const payload = request.body
+  
+if(!payload.name || !payload.number){
+       return response.status(400).json({ 
+      error: 'name or number missing' 
+    })
+    }
+
+  Record.findById(id).then(result => {
+    if (!result) {
+        return response.status(404).json({ error: 'person not found' })
+      }
+    else{
+      result.name = payload.name
+      result.number = payload.number
+
+      return result.save().then((updatedRecored)=>{
+        response.json(updatedRecored)
+      })
+    }
+  })
+  .catch(error => next(error))
+
+})
+
 app.post('/api/persons',(request,response,next)=>{
   const data =request.body
   
