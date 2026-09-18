@@ -13,110 +13,110 @@ morgan.token('body', (req) => {
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
 
-app.get('/api/persons',(request,response)=>{
-  
-    Record.find({}).then(persons => {
+app.get('/api/persons',(request,response) => {
+
+  Record.find({}).then(persons => {
     response.json(persons)
   })
 })
 
-app.get('/info',(request,response)=>{
-    
-    Record.find({}).then(record=>record.length)
-    .then(count =>{
+app.get('/info',(request,response) => {
+
+  Record.find({}).then(record => record.length)
+    .then(count => {
       const date = new Date()
 
-    response.send(`
+      response.send(`
     <p>Phonebook has info for ${count} people</p>
     <p>${date}</p>`)
     })
 
-    })
-app.get('/api/persons/:id',(request,response,next)=>{
-    const id = request.params.id
-    Record.findById(id).then(
-      (newPerson)=>{
-        if(newPerson){
+})
+app.get('/api/persons/:id',(request,response,next) => {
+  const id = request.params.id
+  Record.findById(id).then(
+    (newPerson) => {
+      if(newPerson){
         response.json(newPerson)
-    }
-    else{
-    
+      }
+      else{
+
         response.status(404).end()
-    }
+      }
     })
     .catch(error => next(error))
-    
+
 })
 
-app.delete('/api/persons/:id',(request,response,next)=>{
+app.delete('/api/persons/:id',(request,response,next) => {
   const id = request.params.id
   Record.findByIdAndDelete(id)
-  .then(result => {
-    if(result){
-      response.status(204).end()
-    }
-    else{
-      response.status(404).json({error:'person not found'})
-    }
-    
-  })
-  .catch(error => next(error))
+    .then(result => {
+      if(result){
+        response.status(204).end()
+      }
+      else{
+        response.status(404).json({ error:'person not found' })
+      }
+
+    })
+    .catch(error => next(error))
 })
 
-app.put('/api/persons/:id',(request,response,next)=>{
+app.put('/api/persons/:id',(request,response,next) => {
   const id = request.params.id
   const payload = request.body
-  
-if(!payload.name || !payload.number){
-       return response.status(400).json({ 
-      error: 'name or number missing' 
+
+  if(!payload.name || !payload.number){
+    return response.status(400).json({
+      error: 'name or number missing'
     })
-    }
+  }
 
   Record.findById(id).then(result => {
     if (!result) {
-        return response.status(404).json({ error: 'person not found' })
-      }
+      return response.status(404).json({ error: 'person not found' })
+    }
     else{
       result.name = payload.name
       result.number = payload.number
 
-      return result.save().then((updatedRecored)=>{
+      return result.save().then((updatedRecored) => {
         response.json(updatedRecored)
       })
     }
   })
-  .catch(error => next(error))
+    .catch(error => next(error))
 
 })
 
-app.post('/api/persons',(request,response,next)=>{
+app.post('/api/persons',(request,response,next) => {
   const data =request.body
-  
+
   if (!data.name || !data.number ){
-     return response.status(400).json({ 
-      error: 'name or number missing' 
+    return response.status(400).json({
+      error: 'name or number missing'
     })
   }
-  Record.find({name:data.name})
-  .then(existingPersons => {
-    if(existingPersons.length > 0){
-      return response.status(400).json({
-        error : 'name must be unique'
+  Record.find({ name:data.name })
+    .then(existingPersons => {
+      if(existingPersons.length > 0){
+        return response.status(400).json({
+          error : 'name must be unique'
+        })
+      }
+      const person = new Record({
+        name :data.name,
+        number : data.number
       })
-    }
-    const person = new Record({
-    name :data.name,
-    number : data.number
-  })
 
-  person.save().then(savedPerson => {
-    response.json(savedPerson)
-  })
-  .catch(error => next(error))
-  })
-  
-  .catch(error => next(error))
+      person.save().then(savedPerson => {
+        response.json(savedPerson)
+      })
+        .catch(error => next(error))
+    })
+
+    .catch(error => next(error))
 })
 
 const errorHandler = (error, request, response, next) => {
@@ -125,7 +125,7 @@ const errorHandler = (error, request, response, next) => {
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
   }else if (error.name === 'ValidationError') {
-    return response.status(400).json({ error: error.message }) 
+    return response.status(400).json({ error: error.message })
   }
 
   next(error)
